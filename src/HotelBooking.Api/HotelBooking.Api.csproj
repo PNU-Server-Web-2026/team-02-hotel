@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <RootNamespace>HotelBooking.Api</RootNamespace>
+    <!-- Дозволяє зберігати локальні секрети поза репозиторієм: dotnet user-secrets set ... -->
+    <UserSecretsId>hotel_booking-api</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <!--
+      Явне посилання, щоб усі проєкти (включно з тестами) отримували ту саму версію EF Core,
+      що й Microsoft.EntityFrameworkCore.Design (інакше Npgsql тягне старішу EF Core і буде MSB3277).
+    -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>
