@@ -4,14 +4,13 @@ using HotelBooking.Api.Features.Info;
 
 namespace HotelBooking.Api.Tests.Features.Info;
 
-public class InfoTests(ApiFactory factory) : IClassFixture<ApiFactory>
+[Collection(IntegrationTestCollection.Name)]
+public class InfoTests(ApiFactory factory) : IntegrationTestBase(factory)
 {
-    private readonly HttpClient _client = factory.CreateClient();
-
     [Fact]
     public async Task Get_ReturnsApiInfo()
     {
-        var response = await _client.GetAsync("/api/info");
+        var response = await Client.GetAsync("/api/info");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
