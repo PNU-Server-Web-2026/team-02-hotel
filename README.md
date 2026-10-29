@@ -13,7 +13,7 @@
 - **ASP.NET Core 10** (Web API, контролери)
 - **Entity Framework Core 10** + **PostgreSQL** (Npgsql)
 - **SignalR** (real-time, з'явиться в задачах)
-- **xUnit** + `WebApplicationFactory` (інтеграційні тести)
+- **xUnit** + `WebApplicationFactory` + **Testcontainers** (інтеграційні тести на справжньому PostgreSQL)
 - **Docker** / Docker Compose (локальна БД)
 - **GitHub Actions** (CI: build + test на кожен PR)
 
@@ -47,6 +47,36 @@ dotnet test
 
 - http://localhost:5080/api/ping → `{"message":"pong","utc":"..."}`
 - http://localhost:5080/openapi/v1.json → OpenAPI-документ (лише в середовищі Development)
+
+### Тести
+
+```bash
+dotnet test
+```
+
+Інтеграційні тести працюють на **справжньому PostgreSQL**: перед першим тестом
+[Testcontainers](https://dotnet.testcontainers.org/modules/postgres/) сам піднімає
+контейнер `postgres:17-alpine`, застосовує міграції, а після прогону видаляє контейнер.
+
+- Потрібен **запущений Docker** (Docker Desktop). Без нього тести не стартують.
+- `docker compose up db` для тестів **не потрібен** — тестова БД окрема і не чіпає вашу локальну.
+- Перший запуск довший: Docker завантажує образ PostgreSQL.
+- Перед кожним тестом усі таблиці очищаються, тож тести не залежать від порядку.
+
+Як писати новий інтеграційний тест:
+
+```csharp
+[Collection(IntegrationTestCollection.Name)]
+public class HotelsTests(ApiFactory factory) : IntegrationTestBase(factory)
+{
+    [Fact]
+    public async Task GetAll_ReturnsOk()
+    {
+        var response = await Client.GetAsync("/api/hotels");
+        // ...
+    }
+}
+```
 
 ### Міграції EF Core
 
@@ -91,7 +121,7 @@ dotnet user-secrets set "ConnectionStrings:Default" "Host=...;..." --project src
 │       │   └── Ping/              # приклад: GET /api/ping
 │       └── Common/                # спільний код для кількох фіч
 ├── tests/
-│   └── HotelBooking.Api.Tests/     # інтеграційні тести (xUnit + WebApplicationFactory)
+│   └── HotelBooking.Api.Tests/     # інтеграційні тести (xUnit + WebApplicationFactory + Testcontainers)
 └── .github/                       # CI, шаблони PR та issue, CODEOWNERS
 ```
 
