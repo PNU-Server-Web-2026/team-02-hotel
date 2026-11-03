@@ -3,13 +3,14 @@ using System.Net.Http.Json;
 
 namespace HotelBooking.Api.Tests.Features.Ping;
 
-[Collection(IntegrationTestCollection.Name)]
-public class PingTests(ApiFactory factory) : IntegrationTestBase(factory)
+public class PingTests(ApiFactory factory) : IClassFixture<ApiFactory>
 {
+    private readonly HttpClient _client = factory.CreateClient();
+
     [Fact]
     public async Task Get_ReturnsOkWithPong()
     {
-        var response = await Client.GetAsync("/api/ping");
+        var response = await _client.GetAsync("/api/ping");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
