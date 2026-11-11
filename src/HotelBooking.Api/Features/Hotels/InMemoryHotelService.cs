@@ -44,25 +44,37 @@ public sealed class InMemoryHotelService : IHotelService
 
     public Task<bool> UpdateAsync(int id, UpdateHotelRequest request, CancellationToken cancellationToken)
     {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        if (!_hotels.TryGetValue(id, out var current))
+        // Оптимістичне оновлення: читаємо поточне значення і замінюємо його,
+        // лише якщо за цей час ніхто інший його не змінив. Якщо змінив —
+        // повторюємо з новим значенням. Цикл завершується, коли:
+        //  - TryUpdate спрацював → true (204);
+        //  - готелю вже немає (його видалили) → false (404).
+        while (true)
         {
-            return Task.FromResult(false);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (!_hotels.TryGetValue(id, out var current))
+            {
+                return Task.FromResult(false);
+            }
+
+            var updated = current with
+            {
+                Name = request.Name,
+                City = request.City,
+                Address = request.Address,
+                Stars = request.Stars,
+                Description = request.Description,
+            };
+
+            if (_hotels.TryUpdate(id, updated, current))
+            {
+                return Task.FromResult(true);
+            }
+
+            // Інший запит устиг змінити цей готель між TryGetValue і TryUpdate —
+            // це не означає, що готелю немає. Перечитуємо і пробуємо ще раз.
         }
-
-        var updated = current with
-        {
-            Name = request.Name,
-            City = request.City,
-            Address = request.Address,
-            Stars = request.Stars,
-            Description = request.Description,
-        };
-
-        // TryUpdate замінить значення, лише якщо його ніхто не змінив і не видалив
-        // між читанням вище і цим рядком.
-        return Task.FromResult(_hotels.TryUpdate(id, updated, current));
     }
 
     public Task<bool> DeleteAsync(int id, CancellationToken cancellationToken)
