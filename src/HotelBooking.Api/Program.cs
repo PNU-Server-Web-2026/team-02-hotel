@@ -1,5 +1,6 @@
 using HotelBooking.Api.Data;
 using HotelBooking.Api.Features.Booking;
+using HotelBooking.Api.Features.Hotels;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,7 @@ builder.Services.AddProblemDetails();
 builder.Services.AddOpenApi();
 
 builder.Services.AddBookingFeature(builder.Configuration);
+builder.Services.AddHotelsFeature();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
