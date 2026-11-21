@@ -1,5 +1,6 @@
 using HotelBooking.Api.Data;
 using HotelBooking.Api.Features.Booking;
+using HotelBooking.Api.Features.Hotels;
 using HotelBooking.Api.Features.Rooms;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,7 @@ builder.Services.AddProblemDetails();
 builder.Services.AddOpenApi();
 
 builder.Services.AddBookingFeature(builder.Configuration);
+builder.Services.AddHotelsFeature();
 builder.Services.AddRoomsFeature();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
