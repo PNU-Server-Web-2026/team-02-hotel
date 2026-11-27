@@ -1,4 +1,5 @@
 using HotelBooking.Api.Data;
+using HotelBooking.Api.Features.Guests;
 using HotelBooking.Api.Features.Booking;
 using HotelBooking.Api.Features.Hotels;
 using HotelBooking.Api.Features.Rooms;
@@ -12,6 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddProblemDetails();
 builder.Services.AddOpenApi();
 
+builder.Services.AddGuestsFeature();
 builder.Services.AddBookingFeature(builder.Configuration);
 builder.Services.AddHotelsFeature();
 builder.Services.AddRoomsFeature();
