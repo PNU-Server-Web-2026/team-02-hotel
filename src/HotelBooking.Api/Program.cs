@@ -1,7 +1,8 @@
 using HotelBooking.Api.Data;
-using HotelBooking.Api.Features.Guests;
-using HotelBooking.Api.Features.Booking;
 using HotelBooking.Api.Features.Amenities;
+using HotelBooking.Api.Features.Booking;
+using HotelBooking.Api.Features.Guests;
+using HotelBooking.Api.Features.Health;
 using HotelBooking.Api.Features.Hotels;
 using HotelBooking.Api.Features.Reviews;
 using HotelBooking.Api.Features.Rooms;
@@ -18,6 +19,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddGuestsFeature();
 builder.Services.AddBookingFeature(builder.Configuration);
 builder.Services.AddAmenitiesFeature();
+builder.Services.AddHealthFeature();
 builder.Services.AddHotelsFeature();
 builder.Services.AddReviewsFeature();
 builder.Services.AddRoomsFeature();
@@ -34,6 +36,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.MapHealthFeature();
 app.MapControllers();
 
 app.Run();
