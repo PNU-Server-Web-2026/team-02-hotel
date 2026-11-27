@@ -3,6 +3,7 @@ using HotelBooking.Api.Features.Guests;
 using HotelBooking.Api.Features.Booking;
 using HotelBooking.Api.Features.Amenities;
 using HotelBooking.Api.Features.Hotels;
+using HotelBooking.Api.Features.Reviews;
 using HotelBooking.Api.Features.Rooms;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,7 @@ builder.Services.AddGuestsFeature();
 builder.Services.AddBookingFeature(builder.Configuration);
 builder.Services.AddAmenitiesFeature();
 builder.Services.AddHotelsFeature();
+builder.Services.AddReviewsFeature();
 builder.Services.AddRoomsFeature();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
